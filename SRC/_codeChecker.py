@@ -53,7 +53,7 @@ for f in files:
         break
 
 if mode == '':
-    exit("We seem to have encounterd an ouchy trying to find the language")
+    exit("We seem to have encounterd an error trying to find the language")
 
 command_index = -1
 
@@ -81,7 +81,7 @@ with open("comparison.csv", "w+") as csv_file:
     writer.writerow(['File', 'Master Input', 'Sub Output', 'Matching'])
     if mode == 'python':
         for f in files:
-            if f == master or f == __name__ or f == "_codeChecker.py":
+            if f == master or f == __name__ or f == "_codeChecker.py" or '.py' not in f:
                 continue
             try:
                 process = subprocess.Popen([command, f], stdout=subprocess.PIPE)
@@ -95,4 +95,36 @@ with open("comparison.csv", "w+") as csv_file:
             process = None
 
     if mode == 'c++':
-        
+        if command_index is 0:  # gcc logic
+            for f in files:
+                if f == master or '.cpp' not in f:
+                    continue
+
+                c = f'g++ {f} -o x ' \
+                    f'&& {os.getcwd()}"x'
+
+                try:
+                    process = subprocess.Popen([c], stdout=subprocess.PIPE)
+                    sub_output = process.communicate()[0]
+                    print(f"\n{f}\n\tMaster:\t{master_output}\n\tSub:\t{sub_output}\n\tPass:\t{master_output == sub_output}")
+                    writer.writerow([f, master_output, sub_output, master_output == sub_output])
+
+                except :
+                     print(f'{f} forced an error')
+
+    if mode == 'java':
+        for f in files:
+            if f == master or '.java' not in f:
+                continue
+
+            c = f"javac {f} && java {f.replace('.java', '')}"
+
+            try:
+                process = subprocess.Popen([c], stdout=subprocess.PIPE)
+                sub_output = process.communicate()[0]
+                print( f"\n{f}\n\tMaster:\t{master_output}\n\tSub:\t{sub_output}\n\tPass:\t{master_output == sub_output}")
+                writer.writerow([f, master_output, sub_output, master_output == sub_output])
+
+            except :
+                print(f'{f} forced an error')
+

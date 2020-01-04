@@ -43,12 +43,15 @@ master = 0
 
 for f in files:
     if '_master' in f:
+        print('found', f)
         if '.py' in f:
             mode = 'python'
-        elif '.cpp' in f or '.c' in f:
+        elif '.cpp' in f:
             mode = 'c++'
         elif '.java' in f:
             mode = 'java'
+        elif '.class' in f:
+            continue
         master = f
         break
 
@@ -57,7 +60,7 @@ if mode == '':
 
 command_index = -1
 
-if mode != 'java':
+if mode == 'python':
     for command in commands[operating_system][mode]:
         try:
             process = subprocess.Popen([command, master], stdout=subprocess.PIPE)
@@ -66,7 +69,10 @@ if mode != 'java':
             break
         except :
             continue
-else:
+elif mode == 'java':
+    os.system(f'javac {master}')
+    process = subprocess.Popen(['java', master.replace('.java', '')], stdout=subprocess.PIPE)
+    master_output = process.communicate()[0]
     command_index = 0
 
 if command_index is -1:
@@ -117,13 +123,15 @@ with open("comparison.csv", "w+") as csv_file:
             if f == master or '.java' not in f:
                 continue
 
-            c = f"javac {f} && java {f.replace('.java', '')}"
+            c = f"java {f.replace('.java', '')}"
 
             try:
-                process = subprocess.Popen([c], stdout=subprocess.PIPE)
+                os.system(f'javac {f}')
+                f = f.replace('.java', '')
+                process = subprocess.Popen(['java', f], stdout=subprocess.PIPE)
                 sub_output = process.communicate()[0]
                 print( f"\n{f}\n\tMaster:\t{master_output}\n\tSub:\t{sub_output}\n\tPass:\t{master_output == sub_output}")
-                writer.writerow([f, master_output, sub_output, master_output == sub_output])
+                # writer.writerow([f, master_output, sub_output, master_output == sub_output])
 
             except :
                 print(f'{f} forced an error')

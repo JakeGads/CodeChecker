@@ -28,17 +28,18 @@ commands = {
 
 if system() == "Windows":
     operating_system = "nt"
-    deliminiter = "\\"
+    delimiter = "\\"
+
 else:
     operating_system = "nix"
-    deliminiter = "/"
+    delimiter = "/"
 
 print("OS:", operating_system, "\n\nFinding neccessary commands ... things may flash on the screen be calm")
 
 files = [f for f in os.listdir('.') if os.path.isfile(f)]
 
 mode = ''
-file = 0
+master = 0
 
 for f in files:
     if '_master' in f:
@@ -48,7 +49,7 @@ for f in files:
             mode = 'c++'
         elif '.java' in f:
             mode = 'java'
-        file = f
+        master = f
         break
 
 if mode == '':
@@ -59,22 +60,39 @@ command_index = -1
 if mode != 'java':
     for command in commands[operating_system][mode]:
         try:
-            process = subprocess.Popen([command, file], stdout=subprocess.PIPE)
-            stdout = process.communicate()[0]
+            process = subprocess.Popen([command, master], stdout=subprocess.PIPE)
+            master_output = process.communicate()[0]
             command_index = commands[operating_system][mode].index(command)
             break
         except :
             continue
 else:
-    command_index = 'javac'
+    command_index = 0
 
 if command_index is -1:
-    exit("couln't find the command")
+    exit("failed find the command")
 
-if mode == 'python':
+print(files)
 
+import csv
 
-# process = subprocess.Popen(['python', 'Examples' + deliminiter + '_Hello_World.py'], stdout=subprocess.PIPE) # this lets me test the test the output
-# stdout = process.communicate()[0]
+with open("comparison.csv", "w+") as csv_file:
+    writer = csv.writer(csv_file)
+    writer.writerow(['File', 'Master Input', 'Sub Output', 'Matching'])
+    if mode == 'python':
+        for f in files:
+            if f == master or f == __name__ or f == "_codeChecker.py":
+                continue
+            try:
+                process = subprocess.Popen([command, f], stdout=subprocess.PIPE)
+                sub_output = process.communicate()[0]
 
-# print('STDOUT:{}'.format(stdout))
+                print(f"\n{f}\n\tMaster:\t{master_output}\n\tSub:\t{sub_output}\n\tPass:\t{master_output == sub_output}")
+                writer.writerow([f, master_output, sub_output, master_output == sub_output])
+            except :
+                print(f"{f} forced an error")
+
+            process = None
+
+    if mode == 'c++':
+        

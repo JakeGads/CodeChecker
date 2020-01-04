@@ -1,0 +1,4 @@
+File,Master Input,Sub Output,Matching
+HelloWorld_RyanGads.py,b'Hello World\n',b'Hello World\n',True
+HelloWorld_JakeGads.py,b'Hello World\n',b'Hi Yall\n',False
+comparison.csv,b'Hello World\n',b'',False

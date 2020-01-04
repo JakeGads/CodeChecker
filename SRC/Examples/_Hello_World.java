@@ -1,4 +1,4 @@
-package SRC.Examples;
+//package SRC.Examples;
 public class _Hello_World {
 
     public static void main(String[] args) {

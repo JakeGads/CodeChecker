@@ -74,6 +74,13 @@ elif mode == 'java':
     process = subprocess.Popen(['java', master.replace('.java', '')], stdout=subprocess.PIPE)
     master_output = process.communicate()[0]
     command_index = 0
+elif mode == 'c++':
+    # need to impliment cl command
+    try:
+        os.system(f'g++ {master} -o {master.replace(".cpp", "")} ')
+        process = subprocess.Popen([f'{os.getcwd()}{master.replace(".cpp", "")}'], stdout=subprocess.PIPE)
+        sub_output = process.communicate()[0]
+
 
 if command_index is -1:
     exit("failed find the command")
@@ -101,16 +108,16 @@ with open("comparison.csv", "w+") as csv_file:
             process = None
 
     if mode == 'c++':
-        if command_index is 0:  # gcc logic
+        if command_index is 0 or command_index == 'gcc':  # gcc logic
             for f in files:
                 if f == master or '.cpp' not in f:
                     continue
-
                 c = f'g++ {f} -o x ' \
                     f'&& {os.getcwd()}"x'
-
+                
                 try:
-                    process = subprocess.Popen([c], stdout=subprocess.PIPE)
+                    os.system(f'g++ {f} -o {f.replace(".cpp", "")} ')
+                    process = subprocess.Popen([f'{os.getcwd()}{f.replace(".cpp", "")}'], stdout=subprocess.PIPE)
                     sub_output = process.communicate()[0]
                     print(f"\n{f}\n\tMaster:\t{master_output}\n\tSub:\t{sub_output}\n\tPass:\t{master_output == sub_output}")
                     writer.writerow([f, master_output, sub_output, master_output == sub_output])

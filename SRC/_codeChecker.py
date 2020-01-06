@@ -80,9 +80,10 @@ elif mode == 'c++':
         os.system(f'g++ {master} -o {master.replace(".cpp", "")} ')
         process = subprocess.Popen([f'{os.getcwd()}{master.replace(".cpp", "")}'], stdout=subprocess.PIPE)
         sub_output = process.communicate()[0]
+    except:
+        None
 
-
-if command_index is -1:
+if command_index == -1:
     exit("failed find the command")
 
 print(files)
@@ -104,11 +105,11 @@ with open("comparison.csv", "w+") as csv_file:
                 writer.writerow([f, master_output, sub_output, master_output == sub_output])
             except :
                 print(f"{f} forced an error")
-
+            
             process = None
 
     if mode == 'c++':
-        if command_index is 0 or command_index == 'gcc':  # gcc logic
+        if command_index == 0 or command_index == 'gcc':  # gcc logic
             for f in files:
                 if f == master or '.cpp' not in f:
                     continue
@@ -138,7 +139,7 @@ with open("comparison.csv", "w+") as csv_file:
                 process = subprocess.Popen(['java', f], stdout=subprocess.PIPE)
                 sub_output = process.communicate()[0]
                 print( f"\n{f}\n\tMaster:\t{master_output}\n\tSub:\t{sub_output}\n\tPass:\t{master_output == sub_output}")
-                # writer.writerow([f, master_output, sub_output, master_output == sub_output])
+                writer.writerow([f, master_output, sub_output, master_output == sub_output])
 
             except :
                 print(f'{f} forced an error')

@@ -42,12 +42,15 @@ for f in files:
     if '_master' in f:
         if '.class' in f:
             continue
+
         print('found', f)
 
         if '.py' in f:
             mode = 'python'
+
         elif '.cpp' in f:
             mode = 'c++'
+
         elif '.java' in f:
             mode = 'java'
 
@@ -55,7 +58,7 @@ for f in files:
         break
 
 if mode == '':
-    exit("We seem to have encounterd an error trying to find the language")
+    exit("We seem to have encountered an error trying to find the language")
 
 command_index = -1
 

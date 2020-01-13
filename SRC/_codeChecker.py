@@ -40,7 +40,7 @@ master = 0
 
 for f in files:
     if '_master' in f:
-        if '.class' in f:
+        if '.class' in f or '.' not in f:
             continue
 
         print('found', f)
@@ -62,6 +62,8 @@ if mode == '':
 
 command_index = -1
 
+print(f"Language: {mode}")
+
 if mode == 'python':
     for command in commands[operating_system][mode]:
         try:
@@ -71,7 +73,6 @@ if mode == 'python':
             break
         except:
             continue
-
 elif mode == 'java':
     os.system(f'javac {master}')  # use os.system because it doesn't preform a saftey check
     process = subprocess.Popen(['java', master.replace('.java', '')], stdout=subprocess.PIPE)
@@ -80,16 +81,15 @@ elif mode == 'java':
 elif mode == 'c++':
     # need to impliment cl command
     try:
-        os.system(f'g++ {master} -o {master.replace(".cpp", "")} ')
-        process = subprocess.Popen([f'{os.getcwd()}{master.replace(".cpp", "")}'], stdout=subprocess.PIPE)
-        sub_output = process.communicate()[0]
+        os.system(f'g++ -o {master.replace(".cpp", "")} {master}')
+        process = subprocess.Popen([f'./{master.replace(".cpp", "")}'], stdout=subprocess.PIPE)
+        master_output = process.communicate()[0]
+        command_index = 0
     except:
-        None
+        exit("Building did not work")
 
 if command_index == -1:
     exit("failed find the command")
-
-print(files)
 
 with open("comparison.csv", "w+") as csv_file:
     writer = csv.writer(csv_file)
@@ -120,12 +120,10 @@ with open("comparison.csv", "w+") as csv_file:
             for f in files:
                 if f == master or '.cpp' not in f:
                     continue
-                c = f'g++ {f} -o x ' \
-                    f'&& {os.getcwd()}"x'
 
                 try:
-                    os.system(f'g++ {f} -o {f.replace(".cpp", "")} ')
-                    process = subprocess.Popen([f'{os.getcwd()}{f.replace(".cpp", "")}'], stdout=subprocess.PIPE)
+                    os.system(f'g++ -o {f.replace(".cpp", "")} {f}')
+                    process = subprocess.Popen([f'./{f.replace(".cpp", "")}'], stdout=subprocess.PIPE)
                     sub_output = process.communicate()[0]
                     print(
                         f"\n{f}\n\tMaster:\t{master_output}\n\tSub:\t{sub_output}\n\tPass:\t{master_output == sub_output}")

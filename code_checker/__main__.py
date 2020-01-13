@@ -99,7 +99,7 @@ def main():
 
         if mode == 'python':
             for f in files:
-                if f == master or f == __name__ or f == "excebit.py" or '.py' not in f:
+                if f == master or f == __name__ or f == "__main__.py" or '.py' not in f:
                     continue
                 try:
                     process = subprocess.Popen([command, f], stdout=subprocess.PIPE)

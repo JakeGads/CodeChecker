@@ -14,21 +14,21 @@ setup(
     description="Test code against each other for classes",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/realpython/reader",
-    author="Real Python",
-    author_email="office@realpython.com",
+    url="https://github.com/gadzygadz/CodeChecker",
+    author="Jake Gadaleta",
+    author_email="jake.gads@gmail.com",
     license="MIT",
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
     ],
-    packages=["reader"],
+    packages=["code_checker"],
     include_package_data=True,
-    install_requires=["feedparser", "html2text"],
+    install_requires= [],
     entry_points={
         "console_scripts": [
-            "realpython=reader.__main__:main",
+            "code_checker=code_checker.__main__:main",
         ]
     },
 )

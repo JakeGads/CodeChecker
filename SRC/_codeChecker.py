@@ -71,8 +71,9 @@ if mode == 'python':
             break
         except:
             continue
+
 elif mode == 'java':
-    os.system(f'javac {master}')
+    os.system(f'javac {master}')  # use os.system because it doesn't preform a saftey check
     process = subprocess.Popen(['java', master.replace('.java', '')], stdout=subprocess.PIPE)
     master_output = process.communicate()[0]
     command_index = 0
@@ -132,13 +133,14 @@ with open("comparison.csv", "w+") as csv_file:
 
                 except:
                     print(f'{f} forced an error')
+            for f in files:
+                if '.' not in f:
+                    os.system(f'rm {f}')
 
     if mode == 'java':
         for f in files:
             if f == master or '.java' not in f:
                 continue
-
-            c = f"java {f.replace('.java', '')}"
 
             try:
                 os.system(f'javac {f}')
